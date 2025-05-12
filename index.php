@@ -14,9 +14,28 @@ require_once 'includes/database.php';
 rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
 />
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
 </head>
 <body>
-    
+<style>
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.7s ease-out forwards;
+  }
+</style>
+
+
   <!-- SECTION ACCUEIL -->
   <section class="text-center py-10 bg-white">
     <h2 class="text-3xl font-bold mb-2">Bienvenue chez Blue Bird</h2>
@@ -26,16 +45,16 @@ rel="stylesheet"
 <section class="p-6 bg-gray-50">
   <div class="swiper mySwiper relative">
     <div class="swiper-wrapper">
-      <div class="swiper-slide relative">
-        <img src="uploads/images/bus1.jpg" alt="Bus Bubble" class="w-full rounded-xl shadow">
+      <div class="relative swiper-slide">
+        <img src="images/" alt="Bus Bubble" class="w-full rounded-xl shadow">
         <div class="absolute bottom-2 left-2 bg-white p-2 text-blue-900 font-semibold rounded">Voyagez avec élégance</div>
       </div>
       <div class="swiper-slide relative">
-        <img src="uploads/images/bus2.jpg" alt="Bus Bubble" class="w-full rounded-xl shadow">
+        <img src="images/" alt="Bus Bubble" class="w-full rounded-xl shadow">
         <div class="absolute bottom-2 left-2 bg-white p-2 text-blue-900 font-semibold rounded">Confort garanti</div>
       </div>
       <div class="swiper-slide relative">
-        <img src="uploads/images/bus3.jpg" alt="Bus Bubble" class="w-full rounded-xl shadow">
+        <img src="images/image.png" alt="Bus Bubble" class="w-full rounded-xl shadow">
         <div class="absolute bottom-2 left-2 bg-white p-2 text-blue-900 font-semibold rounded">Plaisir de voyager</div>
       </div>
       <div class="swiper-slide relative">
@@ -108,43 +127,29 @@ rel="stylesheet"
     </div>
   </section>
 
-  <!-- SECTION AVIS CLIENTS -->
+<!-- AVIS CLIENTS -->
 <section class="p-6 bg-white">
-  <h3 class="text-2xl font-bold text-center text-blue-900 mb-8">Ce que disent nos clients</h3>
+  <h3 class="text-2xl font-bold text-center mb-6 text-blue-900">Avis des clients</h3>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <?php
+      $stmt = $pdo->query("SELECT * FROM avis ORDER BY date_creation DESC LIMIT 12");
+      $delay = 0;
+      while ($row = $stmt->fetch()) {
+        echo '<div class="bg-gray-100 p-4 rounded-lg shadow text-center transform opacity-0 animate-fade-in" style="animation-delay: '.($delay * 0.1).'s">';
+        echo '<img src="' . htmlspecialchars($row['photo']) . '" class="w-16 h-16 rounded-full mx-auto mb-3" alt="photo">';
+        echo '<h4 class="font-bold text-blue-800 mb-1">' . htmlspecialchars($row['nom']) . '</h4>';
+        echo '<p class="text-gray-700 text-sm">"' . htmlspecialchars($row['commentaire']) . '"</p>';
+        echo '</div>';
+        $delay++;
+      }
+    ?>
+  </div>
+</section> 
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    <!-- Exemple de commentaire -->
-    <div class="border p-4 rounded shadow flex space-x-4 bg-gray-50">
-      <img src="uploads/clients/client1.jpg" class="w-16 h-16 rounded-full object-cover" alt="Client 1">
-      <div>
-        <h4 class="font-bold text-blue-800">Fatou K.</h4>
-        <p class="text-gray-700 text-sm mt-1">"Excellent service VIP, très confortable et ponctuel. Je recommande vivement !"</p>
-      </div>
-    </div>
 
-    <!-- Répète pour 12 clients -->
-    <div class="border p-4 rounded shadow flex space-x-4 bg-gray-50">
-      <img src="uploads/clients/client2.jpg" class="w-16 h-16 rounded-full object-cover" alt="Client 2">
-      <div>
-        <h4 class="font-bold text-blue-800">Michel D.</h4>
-        <p class="text-gray-700 text-sm mt-1">"Le bus classique est parfait pour mes trajets quotidiens. Merci Bubble !"</p>
-      </div>
-    </div>
 
-    <div class="border p-4 rounded shadow flex space-x-4 bg-gray-50">
-      <img src="uploads/clients/client3.jpg" class="w-16 h-16 rounded-full object-cover" alt="Client 3">
-      <div>
-        <h4 class="font-bold text-blue-800">Aminata S.</h4>
-        <p class="text-gray-700 text-sm mt-1">"Service client impeccable, personnel très professionnel."</p>
-      </div>
-    </div>
-
-    <!-- Ajoute 9 autres blocs similaires ci-dessous -->
-    <!-- ... -->
   </div>
 </section>
-
-
   <!-- MAP LOCALISATION -->
   <section class="p-6">
     <h4 class="text-xl font-bold mb-4 text-center">Notre Localisation</h4>
